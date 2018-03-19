@@ -267,10 +267,9 @@ public class OperadorService {
 	}
 	
 	@DELETE
-	@Path("{id: \\d+}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("{id}")
 	public Response deleteOperador(Operador operador, @PathParam("id") Long id) {
+		System.out.println("hello");
 		try {
 			AlohaTransactionManager tm = new AlohaTransactionManager(getPath());
 			if (tm.findOperadorById(id) == null) {

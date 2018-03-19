@@ -159,9 +159,7 @@ public class UsuariosService {
 	 */
 	@DELETE
 	@Path( "{codigo: \\d+}" )
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response deleteUsuario(Usuario usuario, @PathParam("codigo") Long codigo)
+	public Response deleteUsuario(@PathParam("codigo") Long codigo)
 	{
 		try
 		{
@@ -170,6 +168,7 @@ public class UsuariosService {
 			{
 				return Response.status(404).build();
 			}
+			Usuario usuario = tm.getUsuarioByCodigo(codigo);
 			tm.deleteUsuario(usuario);
 			return Response.status(200).entity(usuario).build();
 		}

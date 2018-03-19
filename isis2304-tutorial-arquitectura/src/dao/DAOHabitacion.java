@@ -58,7 +58,7 @@ public class DAOHabitacion {
 	 */
 	public ArrayList<Habitacion> getHabitaciones() throws SQLException, Exception {
 		ArrayList<Habitacion> habitaciones = new ArrayList<>();
-		String sq1 = String.format("SELECT * FROM %1$s.HABITACIONES", USUARIO);
+		String sq1 = String.format("SELECT * FROM %1$s.HABITACION", USUARIO);
 
 		PreparedStatement prepStmt = conn.prepareStatement(sq1);
 		recursos.add(prepStmt);
@@ -86,7 +86,7 @@ public class DAOHabitacion {
 	 */
 	public ArrayList<Habitacion> getHabitacionesDisponibles() throws SQLException, Exception {
 		ArrayList<Habitacion> habitaciones = new ArrayList<>();
-		String sq1 = String.format("SELECT * FROM %1$s.HABITACIONES WHERE OCUPADO = '0'", USUARIO);
+		String sq1 = String.format("SELECT * FROM %1$s.HABITACION WHERE OCUPADO = '0'", USUARIO);
 
 		PreparedStatement prepStmt = conn.prepareStatement(sq1);
 		recursos.add(prepStmt);
@@ -114,7 +114,7 @@ public class DAOHabitacion {
 	 */
 	public ArrayList<Habitacion> getHabitacionesDisponiblesOperador(Long opID) throws SQLException, Exception {
 		ArrayList<Habitacion> habitaciones = new ArrayList<>();
-		String sq1 = String.format("SELECT * FROM %1$s.HABITACIONES WHERE OCUPADO = '0' AND ID_OPERADR = %2$d", USUARIO,
+		String sq1 = String.format("SELECT * FROM %1$s.HABITACION WHERE OCUPADO = '0' AND ID_OPERADR = %2$d", USUARIO,
 				opID);
 
 		PreparedStatement prepStmt = conn.prepareStatement(sq1);
@@ -130,7 +130,7 @@ public class DAOHabitacion {
 	
 	public Habitacion findHabitacionById(Long id) throws SQLException, Exception
 	{
-		String sq1 = String.format("SELECT * FROM %1$s.HABITACIONES WHERE ID_HABITACION = %2$d", USUARIO, id);
+		String sq1 = String.format("SELECT * FROM %1$s.HABITACION WHERE ID_HABITACION = %2$d", USUARIO, id);
 		
 		PreparedStatement prepStmt = conn.prepareStatement(sq1);
 		recursos.add(prepStmt);
