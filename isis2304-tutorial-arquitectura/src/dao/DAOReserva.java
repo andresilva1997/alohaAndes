@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -212,7 +211,7 @@ public class DAOReserva {
 	public void addReserva(Reserva reserva) throws SQLException, Exception {
 		char s1 = boolToInt(reserva.getCancelado());
 		String sq1 = String.format(
-				"INSERT INTO %1$s.RESERVAS (ID_RESERVA, CODIGOUNIANDINO, ID_OPERADOR, CANCELADO, PRECIO, ID_HABITACION, FECHA_INICIAL, FECHA_FINAL) VALUES (%2$d, %3$d, %4$d, %5$c, %6$f, %7$d, %8$tF, %9$tF)",
+				"INSERT INTO %1$s.RESERVAS (ID_RESERVA, CODIGOUNIANDINO, ID_OPERADOR, CANCELADO, PRECIO, ID_HABITACION, FECHA_INICIAL, FECHA_FINAL, HORA_CREACION) VALUES (%2$d, %3$d, %4$d, %5$c, %6$f, %7$d, TO_DATE('%8$tF', 'YYYY-MM-DD'), TO_DATE('%9$tF', 'YYYY-MM-DD'), CURRENT_TIMESTAMP)",
 				USUARIO, reserva.getIdReserva(), reserva.getidUsuario(), reserva.getidOperador(), s1,
 				reserva.getPrecio(), reserva.getidHabitacion(), reserva.getFechaInicio(), reserva.getFechaFinal());
 
@@ -241,17 +240,18 @@ public class DAOReserva {
 		char s1 = boolToInt(reserva.getCancelado());
 		StringBuilder sq1 = new StringBuilder();
 		sq1.append(String.format("UPDATE %s.RESERVAS SET ", USUARIO));
-		sq1.append(String.format(
-				"ID_RESERVA = %1$d, CODIGOUNIANDINO = %2$d, ID_OPERADOR = %3$d, CANCELADO = '%4$c', PRECIO = %5$f, ID_HABITACION = %6$d, FECHA_INICIAL = TO_DATE('%6$tF', 'YYYY-MM-DD'), FECHA_FINAL = TO_DATE('%7$tF', 'YYYY-MM-DD')",
+		sq1.append(String.format("ID_RESERVA = %1$d, CODIGOUNIANDINO = %2$d, ID_OPERADOR = %3$d, CANCELADO = '%4$c', PRECIO = %5$f, ID_HABITACION = %6$d, FECHA_INICIAL = TO_DATE('%6$tF', 'YYYY-MM-DD'), FECHA_FINAL = TO_DATE('%7$tF', 'YYYY-MM-DD')",
 				reserva.getIdReserva(), reserva.getidUsuario(), reserva.getidOperador(), s1, reserva.getPrecio(),
 				reserva.getidHabitacion(), reserva.getFechaInicio(), reserva.getFechaFinal()));
 		sq1.append(String.format("WHERE ID_RESERVA = %d ", reserva.getIdReserva()));
 
 		System.out.println(sq1);
 		
-		Statement s = conn.createStatement();
-		s.addBatch(sq1.toString());
-		s.executeBatch();
+		
+		
+		PreparedStatement prepStmt = conn.prepareStatement(sq1.toString());
+		recursos.add(prepStmt);
+		prepStmt.executeQuery();
 	}
 
 	/**
@@ -289,9 +289,10 @@ public class DAOReserva {
 		Boolean cancelado = resultSet.getBoolean("CANCELADO");
 		Date fechaInicial = resultSet.getDate("FECHA_INICIAL");
 		Date fechaFinal = resultSet.getDate("FECHA_FINAL");
+		Date horaCreacion = resultSet.getDate("HORA_CREACION");
 
 		Reserva reserva = new Reserva(idReserva, codigoUsuario, idOperador, cancelado, precio, idHabitacion,
-				fechaInicial, fechaFinal);
+				fechaInicial, fechaFinal, horaCreacion);
 
 		return reserva;
 	}

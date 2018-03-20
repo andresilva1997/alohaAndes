@@ -53,7 +53,9 @@ public class Reserva {
 	
 	@JsonProperty(value = "fechaFinal") 
 	private Date fechaFinal;
-
+	
+	@JsonProperty(value = "horaCreacion")
+	private Date horaCreacion;
 	
 	
 	
@@ -80,7 +82,8 @@ public class Reserva {
 			@JsonProperty(value = "precio") Double precio,
 			@JsonProperty(value = "idHabitacion") Long idHabitacion,
 			@JsonProperty(value = "fechaInicio") Date fechaInicio,
-			@JsonProperty(value = "fechaFinal") Date fechaFinal) {
+			@JsonProperty(value = "fechaFinal") Date fechaFinal,
+			@JsonProperty(value = "horaCreacion") Date horaCreacion) {
 		this.fechaFinal = fechaFinal;
 		this.idReserva = idReserva;
 		this.fechaInicio = fechaInicio;
@@ -89,6 +92,7 @@ public class Reserva {
 		this.idOperador = idOperador;
 		this.idHabitacion = idHabitacion;
 		this.precio = precio;
+		this.horaCreacion = horaCreacion;
 	}
 
 	////////////////////////////////////////////
@@ -148,27 +152,12 @@ public class Reserva {
 	}
 
 	/**
-	 * @param idUsuario
-	 *            the idUsuario to set
-	 */
-	public void setidUsuario(Long idUsuario) {
-		this.idUsuario = idUsuario;
-	}
-
-	/**
 	 * @return the idOperador
 	 */
 	public Long getidOperador() {
 		return idOperador;
 	}
 
-	/**
-	 * @param idOperador
-	 *            the idOperador to set
-	 */
-	public void setidOperador(Long idOperador) {
-		this.idOperador = idOperador;
-	}
 
 	/**
 	 * @return the idHabitacion
@@ -177,13 +166,6 @@ public class Reserva {
 		return idHabitacion;
 	}
 
-	/**
-	 * @param idHabitacion
-	 *            the idHabitacion to set
-	 */
-	public void setidHabitacion(Long idHabitacion) {
-		this.idHabitacion = idHabitacion;
-	}
 
 	/**
 	 * @return the idReserva
@@ -192,19 +174,68 @@ public class Reserva {
 		return idReserva;
 	}
 
-	/**
-	 * @param idReserva
-	 *            the idReserva to set
-	 */
-	public void setIdReserva(Long idReserva) {
-		this.idReserva = idReserva;
-	}
 
 	/**
 	 * @return the fechaFinal
 	 */
 	public Date getFechaFinal() {
 		return fechaFinal;
+	}
+
+	/**
+	 * @return the idUsuario
+	 */
+	public Long getIdUsuario() {
+		return idUsuario;
+	}
+
+	/**
+	 * @param idUsuario the idUsuario to set
+	 */
+	public void setIdUsuario(Long idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
+	/**
+	 * @return the idOperador
+	 */
+	public Long getIdOperador() {
+		return idOperador;
+	}
+
+	/**
+	 * @param idOperador the idOperador to set
+	 */
+	public void setIdOperador(Long idOperador) {
+		this.idOperador = idOperador;
+	}
+
+	/**
+	 * @return the idHabitacion
+	 */
+	public Long getIdHabitacion() {
+		return idHabitacion;
+	}
+
+	/**
+	 * @param idHabitacion the idHabitacion to set
+	 */
+	public void setIdHabitacion(Long idHabitacion) {
+		this.idHabitacion = idHabitacion;
+	}
+
+	/**
+	 * @return the horaCreacion
+	 */
+	public Date getHoraCreacion() {
+		return horaCreacion;
+	}
+
+	/**
+	 * @param horaCreacion the horaCreacion to set
+	 */
+	public void setHoraCreacion(Date horaCreacion) {
+		this.horaCreacion = horaCreacion;
 	}
 
 	/**
