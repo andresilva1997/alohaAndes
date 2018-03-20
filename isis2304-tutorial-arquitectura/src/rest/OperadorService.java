@@ -194,7 +194,7 @@ public class OperadorService {
 	@PUT
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
-	@Path("{tipo: \\s+}")
+	@Path("{tipo}")
 	public Response addOperador(Object object,@PathParam("tipo") String tipo) {
 		try {
 			AlohaTransactionManager tm = new AlohaTransactionManager(getPath());
@@ -268,16 +268,40 @@ public class OperadorService {
 	
 	@DELETE
 	@Path("{id}")
-	public Response deleteOperador(Operador operador, @PathParam("id") Long id) {
+	public Response deleteOperador(@PathParam("id") Long id) {
 		System.out.println("hello");
 		try {
-			AlohaTransactionManager tm = new AlohaTransactionManager(getPath());
-			if (tm.findOperadorById(id) == null) {
-				return Response.status(404).build();
-			}
-			tm.deleteOperador(operador);
+AlohaTransactionManager tm = new AlohaTransactionManager(getPath());
 			
-			return Response.status(200).entity(operador).build();
+			Pair pareja = tm.findOperadorById(id);
+			String tipo = pareja.getString();
+			tm.deleteOperador(pareja);
+			switch(tipo.toUpperCase()) {
+			case "HOTEL":
+				Hotel hoteles = (Hotel)pareja.getObject();
+				return Response.status(200).entity(hoteles).build();
+			case "HOSTAL":
+				Hostal hostales = (Hostal)pareja.getObject();
+				return Response.status(200).entity(hostales).build();
+			case "PERSONANATURAL":
+				PersonaNatural personasNaturales = (PersonaNatural)pareja.getObject();
+				return Response.status(200).entity(personasNaturales).build();
+			case "VIVIENDA":
+				Vivienda viviendas = (Vivienda)pareja.getObject();
+				return Response.status(200).entity(viviendas).build();
+			case "VIVIENDAUNI":
+				ViviendaUni viviendasUni = (ViviendaUni)pareja.getObject();
+				return Response.status(200).entity(viviendasUni).build();
+			case "APARTAMENTO":
+				Apartamento apartamentos = (Apartamento)pareja.getObject();
+				return Response.status(200).entity(apartamentos).build();
+			default:
+				return Response.status(404).entity(doErrorMessage(new Exception("No existe"))).build();
+			
+			}
+			
+			
+			
 		}catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}

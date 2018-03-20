@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -99,6 +100,7 @@ public class DAOOperador {
 	
 	public Pair findOperadorById(Long id) throws SQLException, Exception 
 	{
+		System.out.println("2");
 		Pair toReturn;
 		
 		Operador operador = null;
@@ -172,165 +174,196 @@ public class DAOOperador {
 	
 	public void addOperador(Object operador, String tipo) throws Exception {
 		String sql;
+		String sql2="";
 		tipo = tipo.toUpperCase();
+		LinkedHashMap<String, Object> mapa = (LinkedHashMap<String, Object>)operador;
 		switch(tipo) {
 		case "APARTAMENTO": 
 			Apartamento apartamento = (Apartamento)operador;
-			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s',%6$s')",
+			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s')",
 					USUARIO,
-					apartamento.getIdOperador(),
-					apartamento.getCorreo(),
-					apartamento.getCupoTotal(),
-					apartamento.getNombre(),
-					apartamento.getTipo()
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					(String)mapa.get("correo"),
+					(Integer)mapa.get("cupoTotal"),
+					(String)mapa.get("nombre"),
+					(String)mapa.get("tipo")
 					);
 			sql += String.format("INSERT INTO %1$s.APARTAMENTO(ID_OPERADOR,AMOBLADO,PRECIO,SERVICIOPUBLICO,TV,INTERNET,ADMINISTRACION) VALUES(%2$d,'%3$c',%4$f,'%5$c','%6$c','%7$c','%8$c')", 
 					USUARIO,
-					apartamento.getIdOperador(),
-					boolToInt(apartamento.getAmoblado()),
-					apartamento.getPrecio(),
-					boolToInt(apartamento.getServicioPublico()),
-					boolToInt(apartamento.getTv()),
-					boolToInt(apartamento.getInternet()),
-					boolToInt(apartamento.getAdministracion())
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					boolToInt((Boolean)mapa.get("amoblado")),
+					Double.valueOf((Integer)mapa.get("precio")),
+					boolToInt((Boolean)mapa.get("servicioPublico")),
+					boolToInt((Boolean)mapa.get("tv")),
+					boolToInt((Boolean)mapa.get("internet")),
+					boolToInt((Boolean)mapa.get("administracion"))
 					);
 			break;
 		case "HOSTAL":
 			Hostal hostal = (Hostal)operador;
-			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s',%6$s');",
+			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s');",
 					USUARIO,
-					hostal.getIdOperador(),
-					hostal.getCorreo(),
-					hostal.getCupoTotal(),
-					hostal.getNombre(),
-					hostal.getTipo()
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					(String)mapa.get("correo"),
+					(Integer)mapa.get("cupoTotal"),
+					(String)mapa.get("nombre"),
+					(String)mapa.get("tipo")
 					);
 			sql += 	String.format("INSERT INTO %1$s.HOTEL(ID_OPERADOR,RESTAURANTE,PISCINA,PARQUEADERO,WIFI,TVCABLE,NUMREGISTROSDT,DIRECCION,TIPO) VALUES(%2$d,'%3$c','%4$c','%5$c','%6$c','%7$c',%8$d,%9$s,%10$s);", 
 					USUARIO,
-					hostal.getIdOperador(),
-					boolToInt(hostal.getRestaurante()),
-					boolToInt(hostal.getPiscina()),
-					boolToInt(hostal.getParqueadero()),
-					boolToInt(hostal.getWifi()),
-					boolToInt(hostal.getTvCable()),
-					hostal.getNumRegisto(),
-					hostal.getDireccion(),
-					hostal.getTipo());
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					boolToInt((Boolean)mapa.get("restaurante")),
+					boolToInt((Boolean)mapa.get("piscina")),
+					boolToInt((Boolean)mapa.get("parqueadero")),
+					boolToInt((Boolean)mapa.get("wifi")),
+					boolToInt((Boolean)mapa.get("tvCable")),
+					Long.valueOf((Integer)mapa.get("numRegistro")),
+					(String)mapa.get("direccion"),
+					(String)mapa.get("tipo"));
 			sql += String.format("INSERT INTO %1$s.HOSTAL(ID_OPERADOR,HORACIERRE,HORAAPERTURA) VALUES($2$d,$3$d,$4$d)", 
 					USUARIO,
-					hostal.getIdOperador(),
-					hostal.getHoraCierre(),
-					hostal.getHoraApertura()
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					(Integer)mapa.get("horaCierre"),
+					(Integer)mapa.get("horaApertura")
 					);
 			break;
 		case "PERSONANATURAL":
 			PersonaNatural personaNatural = (PersonaNatural)operador;
-			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s',%6$s');",
+			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s');",
 					USUARIO,
-					personaNatural.getIdOperador(),
-					personaNatural.getCorreo(),
-					personaNatural.getCupoTotal(),
-					personaNatural.getNombre(),
-					personaNatural.getTipo()
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					(String)mapa.get("correo"),
+					(Integer)mapa.get("cupoTotal"),
+					(String)mapa.get("nombre"),
+					(String)mapa.get("tipo")
 					);
 			sql+= String.format("INSERT INTO %1$s.PERSONANATURAL(ID_OPERADOR,COSTO_SERVICIOS,BAÑO_COMPARTIDO) VALUES(%2$d,%3$f,'%4$c')", 
 					USUARIO,
-					personaNatural.getIdOperador(),
-					personaNatural.getCostoServicios(),
-					boolToInt(personaNatural.getBanhoCompartido())); 
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					Double.valueOf((Integer)mapa.get("costoServicios")),
+					boolToInt((Boolean)mapa.get("bahnoCompartido"))); 
 			break;
 		case "VIVIENDA":
 			Vivienda vivienda = (Vivienda)operador;
-			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s',%6$s');",
+			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s');",
 					USUARIO,
-					vivienda.getIdOperador(),
-					vivienda.getCorreo(),
-					vivienda.getCupoTotal(),
-					vivienda.getNombre(),
-					vivienda.getTipo()
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					(String)mapa.get("correo"),
+					(Integer)mapa.get("cupoTotal"),
+					(String)mapa.get("nombre"),
+					(String)mapa.get("tipo")
 					);
 			sql += String.format("INSERT INTO %1$s.VIVIENDA(ID_OPERADOR,MENAJE,DIAS_ALQUILADA,NUMERO_HABITACIONES,UBICACION,PRECIO,SEGURO) VALUES (%2$d,'%3$c',%4$d,%5$d,'%6$d',%7$f,'%8$d')",
 					USUARIO,
-					vivienda.getIdOperador(),
-					boolToInt(vivienda.getMenaje()),
-					vivienda.getDiasAlquilada(),
-					vivienda.getNumeroDeHabitaciones(),
-					vivienda.getUbicacion(),
-					vivienda.getCosto(),
-					vivienda.getSeguro());
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					boolToInt((Boolean)mapa.get("menaje")),
+					(Integer)mapa.get("diasAlquilada"),
+					(Integer)mapa.get("numeroDeHabitaciones"),
+					(String)mapa.get("ubicacion"),
+					Double.valueOf((Integer)mapa.get("costo")),
+					(String)mapa.get("seguro"));
 			break;
 		case "VIVIENDAUNI":
 			ViviendaUni viviendaUni = (ViviendaUni)operador;
-			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s',%6$s');",
+			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s');",
 					USUARIO,
-					viviendaUni.getIdOperador(),
-					viviendaUni.getCorreo(),
-					viviendaUni.getCupoTotal(),
-					viviendaUni.getNombre(),
-					viviendaUni.getTipo()
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					(String)mapa.get("correo"),
+					(Integer)mapa.get("cupoTotal"),
+					(String)mapa.get("nombre"),
+					(String)mapa.get("tipo")
 					);
 			sql+= String.format("INSERT INTO %1%s.VIVIENDAUNI(ID_OPERADOR,SALAS_DE_ESTUDIO_COSTO,RESTAURANTE_COSTO,GIMNASIO_COSTO,UBICACION,CAPACIDAD) VALUES(%2$d, %3$f, %4$f, %5$f, '%6$s',%7$d)",
 					USUARIO,
-					viviendaUni.getIdOperador(),
-					viviendaUni.getSalasDeEstudioCosto(),
-					viviendaUni.getRestauranteCosto(),
-					viviendaUni.getGimnasioCosto(),
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					Double.valueOf((Integer)mapa.get("salasDeEstudioCosto")),
+					Double.valueOf((Integer)mapa.get("restauranteCosto")),
+					Double.valueOf((Integer)mapa.get("gimnasioCosto")),
 					viviendaUni.getUbicacion(),
-					viviendaUni.getCapacidad());
+					(Integer)mapa.get("capacidad"));
 			break;
 		case "HOTEL":
-			Hotel hotel = (Hotel)operador;
-			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s',%6$s');",
+			
+			
+			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s')",
 					USUARIO,
-					hotel.getIdOperador(),
-					hotel.getCorreo(),
-					hotel.getCupoTotal(),
-					hotel.getNombre(),
-					hotel.getTipo()
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					(String)mapa.get("correo"),
+					(Integer)mapa.get("cupoTotal"),
+					(String)mapa.get("nombre"),
+					(String)mapa.get("tipo")
 					);
-			sql += 	String.format("INSERT INTO %1$s.HOTEL(ID_OPERADOR,RESTAURANTE,PISCINA,PARQUEADERO,WIFI,TVCABLE,NUMREGISTROSDT,DIRECCION,TIPO) VALUES(%2$d,'%3$c','%4$c','%5$c','%6$c','%7$c',%8$d,%9$s,%10$s)", 
+			sql2= 	String.format("INSERT INTO %1$s.HOTEL(ID_OPERADOR,RESTAURANTE,PISCINA,PARQUEADERO,WIFI,TVCABLE,NUMREGISTROSDT,DIRECCION,TIPO) VALUES(%2$d,'%3$c','%4$c','%5$c','%6$c','%7$c',%8$d,'%9$s','%10$s')", 
 					USUARIO,
-					hotel.getIdOperador(),
-					boolToInt(hotel.getRestaurante()),
-					boolToInt(hotel.getPiscina()),
-					boolToInt(hotel.getParqueadero()),
-					boolToInt(hotel.getWifi()),
-					boolToInt(hotel.getTvCable()),
-					hotel.getNumRegisto(),
-					hotel.getDireccion(),
-					hotel.getTipo());
+					Long.valueOf((Integer)mapa.get("idOperador")),
+					boolToInt((Boolean)mapa.get("restaurante")),
+					boolToInt((Boolean)mapa.get("piscina")),
+					boolToInt((Boolean)mapa.get("parqueadero")),
+					boolToInt((Boolean)mapa.get("wifi")),
+					boolToInt((Boolean)mapa.get("tvCable")),
+					Long.valueOf((Integer)mapa.get("numRegistro")),
+					(String)mapa.get("direccion"),
+					(String)mapa.get("tipo"));
 			break;
 		default:
 			throw new Exception("tipo no es valido");
 		}
 		System.out.println(sql);
 		
+		
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		System.out.println(1);
 		recursos.add(prepStmt);
+		System.out.println(2);
 		prepStmt.executeQuery();
+		System.out.println(3);
+		prepStmt.close();
+		
+		System.out.println(sql2);
+		PreparedStatement prepStmt2 = conn.prepareStatement(sql2);
+		recursos.add(prepStmt2);
+		prepStmt2.executeQuery();
+		prepStmt2.close();
 	}
 
 	
 	
-	public void deleteOperador(Operador operador) throws SQLException, Exception {
+	public void deleteOperador(Pair pareja) throws SQLException, Exception {
 
-		String sql = String.format("DELETE FROM %1$s.OPERADORES WHERE ID = %2$d", USUARIO, operador.getIdOperador());
+		String sql;
+		String tipo = pareja.getString();
+		Object coso = pareja.getObject();
+		switch(tipo.toUpperCase()) {
+		case "HOTEL":
+			Hotel operador = (Hotel)coso;
+			sql = String.format("DELETE FROM %1$s.OPERADORES WHERE ID_OPERADOR = %2$d", USUARIO, operador.getIdOperador());
+			break;
+		case "HOSTAL":
+			Hostal operadorHost = (Hostal)coso;
+			sql = String.format("DELETE FROM %1$s.OPERADORES WHERE ID_OPERADOR = %2$d", USUARIO, operadorHost.getIdOperador());
+			break;
+		case "PERSONANATURAL":
+			PersonaNatural operadorPN = (PersonaNatural)coso;
+			sql = String.format("DELETE FROM %1$s.OPERADORES WHERE ID_OPERADOR = %2$d", USUARIO, operadorPN.getIdOperador());
+			break;
+		case "VIVIENDA":
+			Vivienda operadorV = (Vivienda)coso;
+			sql = String.format("DELETE FROM %1$s.OPERADORES WHERE ID_OPERADOR = %2$d", USUARIO, operadorV.getIdOperador());
+			break;
+		case "VIVIENDAUNI":
+			ViviendaUni operadorVU = (ViviendaUni)coso;
+			sql = String.format("DELETE FROM %1$s.OPERADORES WHERE ID_OPERADOR = %2$d", USUARIO, operadorVU.getIdOperador());
+			break;
+		case "APARTAMENTO":
+			Apartamento operadorA = (Apartamento)coso;
+			sql = String.format("DELETE FROM %1$s.OPERADORES WHERE ID_OPERADOR = %2$d", USUARIO, operadorA.getIdOperador());
+			break;
+		default:
+			throw new Exception("deleteOperadro DAO operador aca hay excepcion");
+		
+		}
 		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
-		recursos.add(prepStmt);
-		prepStmt.executeQuery();
-	}
-
-	
-	public void updateOperador(Operador operador) throws SQLException {
-		StringBuilder sql = new StringBuilder();
-		sql.append(String.format("UPDATE %s.OPERADORES SET ", USUARIO));
-		sql.append(String.format("CORREO = '%1$s' AND CUPO = %2$d AND NOMBRE = '%3$s' AND TIPO = '%4$s'", operador.getCorreo(),operador.getCupoTotal(),operador.getNombre(), operador.getTipo()));
-		sql.append(String.format(" WHERE ID_OPERADOR = %d", operador.getIdOperador()));
-		
-		System.out.println(sql);
-		
-		PreparedStatement prepStmt = conn.prepareStatement(sql.toString());
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
 	}
@@ -342,10 +375,10 @@ public class DAOOperador {
 		case "APARTAMENTO": 
 			Apartamento apartamento = (Apartamento)operador;
 			sql.append(String.format("UPDATE %s.OPERADORES SET ", USUARIO));
-			sql.append(String.format("CORREO = '%1$s' AND CUPO = %2$d AND NOMBRE = '%3$s' AND TIPO = '%4$s' ", apartamento.getCorreo(),apartamento.getCupoTotal(),apartamento.getNombre(), apartamento.getTipo()));
+			sql.append(String.format("CORREO = '%1$s' AND CUPO = %2$d, NOMBRE = '%3$s' , TIPO = '%4$s' ", apartamento.getCorreo(),apartamento.getCupoTotal(),apartamento.getNombre(), apartamento.getTipo()));
 			sql.append(String.format("WHERE ID_OPERADOR = %d;", apartamento.getIdOperador()));
 			sql.append(String.format("UPDATE %s.APARTAMENTO SET ", USUARIO));
-			sql.append(String.format("AMOBLADO = '%1$c' AND PRECIO = %2$f AND SERVICIOPUBLICO ='%3$c' AND TV = '%4$c' AND INTERNET = '%5$c' AND ADMINISTRACION ='%6$c' ",
+			sql.append(String.format("AMOBLADO = '%1$c' , PRECIO = %2$f , SERVICIOPUBLICO ='%3$c' , TV = '%4$c' AND INTERNET = '%5$c' AND ADMINISTRACION ='%6$c' ",
 					apartamento.getAmoblado(),
 					apartamento.getPrecio(), 
 					apartamento.getServicioPublico(),

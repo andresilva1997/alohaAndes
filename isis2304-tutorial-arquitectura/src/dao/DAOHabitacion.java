@@ -114,8 +114,7 @@ public class DAOHabitacion {
 	 */
 	public ArrayList<Habitacion> getHabitacionesDisponiblesOperador(Long opID) throws SQLException, Exception {
 		ArrayList<Habitacion> habitaciones = new ArrayList<>();
-		String sq1 = String.format("SELECT * FROM %1$s.HABITACION WHERE OCUPADO = '0' AND ID_OPERADR = %2$d", USUARIO,
-				opID);
+		String sq1 = String.format("SELECT * FROM %1$s.HABITACION WHERE OCUPADO = '0' AND ID_OPERADOR = %2$d", USUARIO, opID);
 
 		PreparedStatement prepStmt = conn.prepareStatement(sq1);
 		recursos.add(prepStmt);
@@ -135,8 +134,13 @@ public class DAOHabitacion {
 		PreparedStatement prepStmt = conn.prepareStatement(sq1);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
+		Habitacion respu = null;
+		while(rs.next())
+		{
+			respu = convertResultSetToHabitacion(rs);
+		}
 
-		return convertResultSetToHabitacion(rs);
+		return respu;
 	}
 
 	/**
@@ -153,11 +157,13 @@ public class DAOHabitacion {
 	 *             Si se genera un error dentro del metodo.
 	 */
 	public void addHabitacion(Habitacion habitacion) throws SQLException, Exception {
-		String sq1 = String.format(
-				"INSERT INTO %1$s.HABITACION (ID_OPERADOR, ID_HABITACION, TIPO, CUPO, PRECIO, UBICACION, NUMERO, MENAJE, OCUPADO) VALUES (%2$d, %3$d, %4$s, %5$d, %6$f, %7$s, %8$d, %9$c, %10$c)",
-				habitacion.getIdOperador(), habitacion.getIdHabitacion(), habitacion.getTipo(), habitacion.getCupo(),
-				habitacion.getPrecio(), habitacion.getUbicacion(), habitacion.getNumero(), habitacion.getMenaje(),
-				habitacion.getOcupado());
+		
+		char s1 =  boolToInt(habitacion.getMenaje());
+		char s2 = boolToInt(habitacion.getOcupado());
+		String sq1 = String.format( "INSERT INTO %1$s.HABITACION (ID_OPERADOR, ID_HABITACION, TIPO, CUPO, PRECIO, UBICACION, NUMERO, MENAJE, OCUPADO) VALUES (%2$d, %3$d, '%4$s', %5$d, %6$f, '%7$s', %8$d, '%9$c', '%10$c')",
+																			USUARIO, habitacion.getIdOperador(), habitacion.getIdHabitacion(), habitacion.getTipo(), habitacion.getCupo(),
+				habitacion.getPrecio(), habitacion.getUbicacion(), habitacion.getNumero(), s1,
+				s2);
 
 		System.out.println(sq1);
 
@@ -181,14 +187,14 @@ public class DAOHabitacion {
 	 *             Si se genera un error dentro del metodo.
 	 */
 	public void updateHabitacion(Habitacion habitacion) throws SQLException, Exception {
+		
+		char s1 = boolToInt(habitacion.getMenaje());
+		char s2 = boolToInt(habitacion.getOcupado());
 		StringBuilder sq1 = new StringBuilder();
 		sq1.append(String.format("UPDATE %s.HABITACION SET ", USUARIO));
-		sq1.append(String.format(
-				"ID_OPERADOR  = '%1$d' AND ID_HABITACION = '%2$d' AND TIPO = '%3$s' AND CUPO = '%4$d' AND PRECIO = '%5$f' AND UBICACION = '%6$s' "
-						+ "AND NUMERO = '%7$d' AND MENAJE = '%2$c' AND OCUPADO = '%2$c'",
+		sq1.append(String.format("ID_OPERADOR  = '%1$d', ID_HABITACION = '%2$d', TIPO = '%3$s', CUPO = '%4$d', PRECIO = '%5$f', UBICACION = '%6$s', NUMERO = '%7$d', MENAJE = '%8$s', OCUPADO = '%9$s'",
 				habitacion.getIdOperador(), habitacion.getIdHabitacion(), habitacion.getTipo(), habitacion.getCupo(),
-				habitacion.getPrecio(), habitacion.getUbicacion(), habitacion.getNumero(), habitacion.getMenaje(),
-				habitacion.getOcupado()));
+				habitacion.getPrecio(), habitacion.getUbicacion(), habitacion.getNumero(), s1, s2));
 		sq1.append(String.format("WHERE ID_HABITACION = '%d'", habitacion.getIdHabitacion()));
 
 		System.out.println(sq1);
@@ -246,6 +252,11 @@ public class DAOHabitacion {
 	public void setConn(Connection connection){
 		this.conn = connection;
 	}
+	
+	private char boolToInt(Boolean bol) {
+		return bol?'1':'0';
+	}
+	
 	
 	/**
 	 * Metodo que cierra todos los recursos que se encuentran en el arreglo de recursos<br/>

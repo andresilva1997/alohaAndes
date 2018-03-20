@@ -1100,6 +1100,7 @@ public class AlohaTransactionManager {
 		 * @throws Exception -  Cualquier error que se genere durante la transaccion
 		 */
 		public Pair findOperadorById(Long id) throws Exception {
+			System.out.println("llego");
 			DAOOperador daoOperador = new DAOOperador();
 			Pair operador;
 			try 
@@ -1228,7 +1229,7 @@ public class AlohaTransactionManager {
 		 * @param operador - Operador a actualizar. operador != null
 		 * @throws Exception - Cualquier error que se genere actualizando al operador.
 		 */
-		public void updateOperador(Operador operador) throws Exception 
+		public void updateOperador(Operador operador, String tipo) throws Exception 
 		{
 			DAOOperador daoOperador = new DAOOperador( );
 			try
@@ -1239,7 +1240,7 @@ public class AlohaTransactionManager {
 				{
 					throw new Exception("El operador al que esta intentando modificar no existe");
 				}
-				daoOperador.updateOperador(operador);		
+				daoOperador.updateOperador(operador, tipo);		
 
 			}
 			catch (SQLException sqlException) {
@@ -1316,17 +1317,14 @@ public class AlohaTransactionManager {
 		 * @param Operador - operador a eliminar. operador != null
 		 * @throws Exception - Cualquier error que se genere eliminando al operador.
 		 */
-		public void deleteOperador(Operador operador) throws Exception 
+		public void deleteOperador(Pair operador) throws Exception 
 		{
 			DAOOperador daoOperador = new DAOOperador( );
 			try
 			{
 				this.conn = darConexion();
 				daoOperador.setConn( conn );
-				if(daoOperador.findOperadorById(operador.getIdOperador()) == null)
-				{
-					throw new Exception("El operador que esta intentando eliminar no existe");
-				}
+				
 				daoOperador.deleteOperador(operador);
 
 			}

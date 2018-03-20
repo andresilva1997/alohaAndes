@@ -214,14 +214,13 @@ public class HabitacionService {
 	 */
 	@DELETE
 	@Path("{id: \\d+}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response deleteHabitacion(Habitacion habitacion, @PathParam("id") Long id) {
+	public Response deleteHabitacion(@PathParam("id") Long id) {
 		try {
 			AlohaTransactionManager tm = new AlohaTransactionManager(getPath());
 			if (tm.getReservaById(id) == null) {
 				return Response.status(404).build();
 			}
+			Habitacion habitacion = tm.getAllHabitacionesById(id);
 			tm.deleteHabitacion(habitacion);
 			return Response.status(200).entity(habitacion).build();
 		} catch (Exception e) {
