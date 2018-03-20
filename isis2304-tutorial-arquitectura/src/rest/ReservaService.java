@@ -202,6 +202,7 @@ public class ReservaService {
 		}
 	}
 
+
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -211,7 +212,11 @@ public class ReservaService {
 			AlohaTransactionManager tm = new AlohaTransactionManager(getPath());
 
 			List<String> res = tm.RFC2();
-			return Response.status(200).entity(res).build();
+			StringBuilder st1 = new StringBuilder();
+			for (int i = 0; i < res.size(); i++) {
+				st1.append(res.get(i));
+			}
+			return Response.ok(st1.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
@@ -225,10 +230,15 @@ public class ReservaService {
 		try {
 			AlohaTransactionManager tm = new AlohaTransactionManager(getPath());
 			List<String> res = tm.RFC1();
-			return Response.status(200).entity(res).build();
+			StringBuilder st1 = new StringBuilder();
+			for (int i = 0; i < res.size(); i++) {
+				st1.append(res.get(i));
+			}
+			return Response.ok(st1.toString(), MediaType.APPLICATION_JSON).build();
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 	}
+
 
 }

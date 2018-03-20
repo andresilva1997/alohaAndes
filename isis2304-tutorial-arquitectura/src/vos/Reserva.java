@@ -80,7 +80,7 @@ public class Reserva {
 			@JsonProperty(value = "precio") Double precio,
 			@JsonProperty(value = "idHabitacion") Long idHabitacion,
 			@JsonProperty(value = "fechaInicio") Date fechaInicio,
-			@JsonProperty(value = "fechaInicio") Date fechaFinal) {
+			@JsonProperty(value = "fechaFinal") Date fechaFinal) {
 		this.fechaFinal = fechaFinal;
 		this.idReserva = idReserva;
 		this.fechaInicio = fechaInicio;

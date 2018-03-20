@@ -199,36 +199,14 @@ public class OperadorService {
 		try {
 			AlohaTransactionManager tm = new AlohaTransactionManager(getPath());
 			tm.addOperador(object, tipo);
-			switch(tipo.toUpperCase()) {
-			case "HOTEL":
-				Hotel hoteles = (Hotel)object;
-				return Response.status(200).entity(hoteles).build();
-			case "HOSTAL":
-				Hostal hostales = (Hostal)object;
-				return Response.status(200).entity(hostales).build();
-			case "PERSONANATURAL":
-				PersonaNatural personasNaturales = (PersonaNatural)object;
-				return Response.status(200).entity(personasNaturales).build();
-			case "VIVIENDA":
-				Vivienda viviendas = (Vivienda)object;
-				return Response.status(200).entity(viviendas).build();
-			case "VIVIENDAUNI":
-				ViviendaUni viviendasUni = (ViviendaUni)object;
-				return Response.status(200).entity(viviendasUni).build();
-			case "APARTAMENTO":
-				Apartamento apartamentos = (Apartamento)object;
-				return Response.status(200).entity(apartamentos).build();
-			default:
-				return Response.status(404).entity(doErrorMessage(new Exception("No existe"))).build();
-			
-			}
+			return Response.status(200).build();
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 	}
 	
 	@POST
-	@Path("{tipo: \\s+}/{id: \\d+}")
+	@Path("{tipo}/{id: \\d+}")
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Response updateOperador(Object object, @PathParam("tipo") String tipo, @PathParam("id") Long id) {
@@ -238,29 +216,7 @@ public class OperadorService {
 				return Response.status(404).build();
 			}
 			tm.updateOperador(object, tipo);
-			switch(tipo.toUpperCase()) {
-			case "HOTEL":
-				Hotel hoteles = (Hotel)object;
-				return Response.status(200).entity(hoteles).build();
-			case "HOSTAL":
-				Hostal hostales = (Hostal)object;
-				return Response.status(200).entity(hostales).build();
-			case "PERSONANATURAL":
-				PersonaNatural personasNaturales = (PersonaNatural)object;
-				return Response.status(200).entity(personasNaturales).build();
-			case "VIVIENDA":
-				Vivienda viviendas = (Vivienda)object;
-				return Response.status(200).entity(viviendas).build();
-			case "VIVIENDAUNI":
-				ViviendaUni viviendasUni = (ViviendaUni)object;
-				return Response.status(200).entity(viviendasUni).build();
-			case "APARTAMENTO":
-				Apartamento apartamentos = (Apartamento)object;
-				return Response.status(200).entity(apartamentos).build();
-			default:
-				return Response.status(404).entity(doErrorMessage(new Exception("No existe"))).build();
-			
-			}
+			return Response.status(200).build();
 		}catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}

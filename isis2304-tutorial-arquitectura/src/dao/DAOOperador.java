@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -175,11 +176,11 @@ public class DAOOperador {
 	public void addOperador(Object operador, String tipo) throws Exception {
 		String sql;
 		String sql2="";
+		String sql3=null;
 		tipo = tipo.toUpperCase();
 		LinkedHashMap<String, Object> mapa = (LinkedHashMap<String, Object>)operador;
 		switch(tipo) {
 		case "APARTAMENTO": 
-			Apartamento apartamento = (Apartamento)operador;
 			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s')",
 					USUARIO,
 					Long.valueOf((Integer)mapa.get("idOperador")),
@@ -188,7 +189,7 @@ public class DAOOperador {
 					(String)mapa.get("nombre"),
 					(String)mapa.get("tipo")
 					);
-			sql += String.format("INSERT INTO %1$s.APARTAMENTO(ID_OPERADOR,AMOBLADO,PRECIO,SERVICIOPUBLICO,TV,INTERNET,ADMINISTRACION) VALUES(%2$d,'%3$c',%4$f,'%5$c','%6$c','%7$c','%8$c')", 
+			sql2= String.format("INSERT INTO %1$s.APARTAMENTO(ID_OPERADOR,AMOBLADO,PRECIO,SERVICIOPUBLICO,TV,INTERNET,ADMINISTRACION) VALUES(%2$d,'%3$c',%4$f,'%5$c','%6$c','%7$c','%8$c')", 
 					USUARIO,
 					Long.valueOf((Integer)mapa.get("idOperador")),
 					boolToInt((Boolean)mapa.get("amoblado")),
@@ -200,7 +201,6 @@ public class DAOOperador {
 					);
 			break;
 		case "HOSTAL":
-			Hostal hostal = (Hostal)operador;
 			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s');",
 					USUARIO,
 					Long.valueOf((Integer)mapa.get("idOperador")),
@@ -209,7 +209,7 @@ public class DAOOperador {
 					(String)mapa.get("nombre"),
 					(String)mapa.get("tipo")
 					);
-			sql += 	String.format("INSERT INTO %1$s.HOTEL(ID_OPERADOR,RESTAURANTE,PISCINA,PARQUEADERO,WIFI,TVCABLE,NUMREGISTROSDT,DIRECCION,TIPO) VALUES(%2$d,'%3$c','%4$c','%5$c','%6$c','%7$c',%8$d,%9$s,%10$s);", 
+			sql2= 	String.format("INSERT INTO %1$s.HOTEL(ID_OPERADOR,RESTAURANTE,PISCINA,PARQUEADERO,WIFI,TVCABLE,NUMREGISTROSDT,DIRECCION,TIPO) VALUES(%2$d,'%3$c','%4$c','%5$c','%6$c','%7$c',%8$d,%9$s,%10$s);", 
 					USUARIO,
 					Long.valueOf((Integer)mapa.get("idOperador")),
 					boolToInt((Boolean)mapa.get("restaurante")),
@@ -220,7 +220,7 @@ public class DAOOperador {
 					Long.valueOf((Integer)mapa.get("numRegistro")),
 					(String)mapa.get("direccion"),
 					(String)mapa.get("tipo"));
-			sql += String.format("INSERT INTO %1$s.HOSTAL(ID_OPERADOR,HORACIERRE,HORAAPERTURA) VALUES($2$d,$3$d,$4$d)", 
+			sql3= String.format("INSERT INTO %1$s.HOSTAL(ID_OPERADOR,HORACIERRE,HORAAPERTURA) VALUES($2$d,$3$d,$4$d)", 
 					USUARIO,
 					Long.valueOf((Integer)mapa.get("idOperador")),
 					(Integer)mapa.get("horaCierre"),
@@ -228,8 +228,7 @@ public class DAOOperador {
 					);
 			break;
 		case "PERSONANATURAL":
-			PersonaNatural personaNatural = (PersonaNatural)operador;
-			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s');",
+			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s')",
 					USUARIO,
 					Long.valueOf((Integer)mapa.get("idOperador")),
 					(String)mapa.get("correo"),
@@ -237,15 +236,14 @@ public class DAOOperador {
 					(String)mapa.get("nombre"),
 					(String)mapa.get("tipo")
 					);
-			sql+= String.format("INSERT INTO %1$s.PERSONANATURAL(ID_OPERADOR,COSTO_SERVICIOS,BAÑO_COMPARTIDO) VALUES(%2$d,%3$f,'%4$c')", 
+			sql2= String.format("INSERT INTO %1$s.PERSONANATURAL(ID_OPERADOR,COSTO_SERVICIOS,BAÑO_COMPARTIDO) VALUES(%2$d,%3$f,'%4$c')", 
 					USUARIO,
 					Long.valueOf((Integer)mapa.get("idOperador")),
 					Double.valueOf((Integer)mapa.get("costoServicios")),
 					boolToInt((Boolean)mapa.get("bahnoCompartido"))); 
 			break;
 		case "VIVIENDA":
-			Vivienda vivienda = (Vivienda)operador;
-			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s');",
+			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s')",
 					USUARIO,
 					Long.valueOf((Integer)mapa.get("idOperador")),
 					(String)mapa.get("correo"),
@@ -253,7 +251,7 @@ public class DAOOperador {
 					(String)mapa.get("nombre"),
 					(String)mapa.get("tipo")
 					);
-			sql += String.format("INSERT INTO %1$s.VIVIENDA(ID_OPERADOR,MENAJE,DIAS_ALQUILADA,NUMERO_HABITACIONES,UBICACION,PRECIO,SEGURO) VALUES (%2$d,'%3$c',%4$d,%5$d,'%6$d',%7$f,'%8$d')",
+			sql2= String.format("INSERT INTO %1$s.VIVIENDA(ID_OPERADOR,MENAJE,DIAS_ALQUILADA,NUMERO_HABITACIONES,UBICACION,PRECIO,SEGURO) VALUES (%2$d,'%3$c',%4$d,%5$d,'%6$d',%7$f,'%8$d')",
 					USUARIO,
 					Long.valueOf((Integer)mapa.get("idOperador")),
 					boolToInt((Boolean)mapa.get("menaje")),
@@ -264,8 +262,7 @@ public class DAOOperador {
 					(String)mapa.get("seguro"));
 			break;
 		case "VIVIENDAUNI":
-			ViviendaUni viviendaUni = (ViviendaUni)operador;
-			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s');",
+			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s')",
 					USUARIO,
 					Long.valueOf((Integer)mapa.get("idOperador")),
 					(String)mapa.get("correo"),
@@ -273,18 +270,16 @@ public class DAOOperador {
 					(String)mapa.get("nombre"),
 					(String)mapa.get("tipo")
 					);
-			sql+= String.format("INSERT INTO %1%s.VIVIENDAUNI(ID_OPERADOR,SALAS_DE_ESTUDIO_COSTO,RESTAURANTE_COSTO,GIMNASIO_COSTO,UBICACION,CAPACIDAD) VALUES(%2$d, %3$f, %4$f, %5$f, '%6$s',%7$d)",
+			sql2= String.format("INSERT INTO %1$s.VIVIENDAUNI(ID_OPERADOR,SALAS_DE_ESTUDIO_COSTO,RESTAURANTE_COSTO,GIMNASIO_COSTO,UBICACION,CAPACIDAD) VALUES(%2$d, %3$f, %4$f, %5$f, '%6$s',%7$d)",
 					USUARIO,
 					Long.valueOf((Integer)mapa.get("idOperador")),
 					Double.valueOf((Integer)mapa.get("salasDeEstudioCosto")),
 					Double.valueOf((Integer)mapa.get("restauranteCosto")),
 					Double.valueOf((Integer)mapa.get("gimnasioCosto")),
-					viviendaUni.getUbicacion(),
+					(String)mapa.get("ubicacion"),
 					(Integer)mapa.get("capacidad"));
 			break;
 		case "HOTEL":
-			
-			
 			sql = String.format("INSERT INTO %1$s.OPERADORES(ID_OPERADOR,CORREO,CUPO,NOMBRE,TIPO) VALUES(%2$d, '%3$s', %4$d, '%5$s','%6$s')",
 					USUARIO,
 					Long.valueOf((Integer)mapa.get("idOperador")),
@@ -308,22 +303,30 @@ public class DAOOperador {
 		default:
 			throw new Exception("tipo no es valido");
 		}
+		
+		
+		
 		System.out.println(sql);
-		
-		
-		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		Statement s = conn.createStatement();
+		s.addBatch(sql);
+		/*PreparedStatement prepStmt = conn.prepareStatement(sql);
 		System.out.println(1);
 		recursos.add(prepStmt);
 		System.out.println(2);
 		prepStmt.executeQuery();
 		System.out.println(3);
-		prepStmt.close();
+		prepStmt.close();*/
 		
 		System.out.println(sql2);
-		PreparedStatement prepStmt2 = conn.prepareStatement(sql2);
+		s.addBatch(sql2);
+		if(sql3!=null) {
+			s.addBatch(sql3);
+		}
+		s.executeBatch();
+		/*PreparedStatement prepStmt2 = conn.prepareStatement(sql2);
 		recursos.add(prepStmt2);
 		prepStmt2.executeQuery();
-		prepStmt2.close();
+		prepStmt2.close();*/
 	}
 
 	
@@ -371,110 +374,132 @@ public class DAOOperador {
 	public void updateOperador(Object operador, String tipo)throws SQLException, Exception{
 	tipo = tipo.toUpperCase();
 	StringBuilder sql = new StringBuilder();
+	StringBuilder sql2 = new StringBuilder();
+	StringBuilder sql3 = null;
+	LinkedHashMap<String, Object> mapa = (LinkedHashMap<String, Object>)operador;
 	 switch(tipo) {
 		case "APARTAMENTO": 
-			Apartamento apartamento = (Apartamento)operador;
 			sql.append(String.format("UPDATE %s.OPERADORES SET ", USUARIO));
-			sql.append(String.format("CORREO = '%1$s' AND CUPO = %2$d, NOMBRE = '%3$s' , TIPO = '%4$s' ", apartamento.getCorreo(),apartamento.getCupoTotal(),apartamento.getNombre(), apartamento.getTipo()));
-			sql.append(String.format("WHERE ID_OPERADOR = %d;", apartamento.getIdOperador()));
-			sql.append(String.format("UPDATE %s.APARTAMENTO SET ", USUARIO));
-			sql.append(String.format("AMOBLADO = '%1$c' , PRECIO = %2$f , SERVICIOPUBLICO ='%3$c' , TV = '%4$c' AND INTERNET = '%5$c' AND ADMINISTRACION ='%6$c' ",
-					apartamento.getAmoblado(),
-					apartamento.getPrecio(), 
-					apartamento.getServicioPublico(),
-					apartamento.getTv(),
-					apartamento.getInternet(),
-					apartamento.getAdministracion()));
-			sql.append(String.format("WHERE ID_OPERADOR = %d", apartamento.getIdOperador()));
+			sql.append(String.format("CORREO = '%1$s' AND CUPO = %2$d, NOMBRE = '%3$s' , TIPO = '%4$s' ", 
+					(String)mapa.get("correo"),
+					(Integer)mapa.get("cupoTotal"),
+					(String)mapa.get("nombre"),
+					(String)mapa.get("tipo")
+												));
+			sql.append(String.format("WHERE ID_OPERADOR = %d", Long.valueOf((Integer)mapa.get("idOperador"))));
+			sql2.append(String.format("UPDATE %s.APARTAMENTO SET ", USUARIO));
+			sql2.append(String.format("AMOBLADO = '%1$c' , PRECIO = %2$f , SERVICIOPUBLICO ='%3$c' , TV = '%4$c', INTERNET = '%5$c', ADMINISTRACION ='%6$c' ",
+			boolToInt((Boolean)mapa.get("amoblado")),
+			Double.valueOf((Integer)mapa.get("precio")),
+			boolToInt((Boolean)mapa.get("servicioPublico")),
+			boolToInt((Boolean)mapa.get("tv")),
+			boolToInt((Boolean)mapa.get("internet")),
+			boolToInt((Boolean)mapa.get("administracion"))));
+			sql2.append(String.format("WHERE ID_OPERADOR = %d",Long.valueOf((Integer)mapa.get("idOperador"))));
 			break;
 		case "HOSTAL":
-			Hostal hostal = (Hostal)operador;
 			sql.append(String.format("UPDATE %s.OPERADORES SET ", USUARIO));
-			sql.append(String.format("CORREO = '%1$s' AND CUPO = %2$d AND NOMBRE = '%3$s' AND TIPO = '%4$s' ", hostal.getCorreo(),hostal.getCupoTotal(),hostal.getNombre(), hostal.getTipo()));
-			sql.append(String.format(" WHERE ID_OPERADOR = %d;", hostal.getIdOperador()));
-			sql.append(String.format("UPDATE %s.HOTEL SET ", USUARIO));
-			sql.append(String.format("RESTAURANTE = '%1$c' AND PISCINA ='%2$c' AND PARQUEADERO='%3$c' AND WIFI ='%4$c' AND TVCABLE='%5$c' AND NUMREGISTROSDT =%6$d AND DIRECCION = '%7$s' AND TIPO = '%8$s'", 
-					boolToInt(hostal.getRestaurante()),
-					boolToInt(hostal.getPiscina()),
-					boolToInt(hostal.getParqueadero()),
-					boolToInt(hostal.getWifi()),
-					boolToInt(hostal.getTvCable()),
-					hostal.getNumRegisto(),
-					hostal.getDireccion(),
-					hostal.getTipo()));
-			sql.append(String.format(" WHERE ID_OPERADOR = %d;", hostal.getIdOperador()));
-			sql.append(String.format("UPDATE %s.HOSTAL SET ", USUARIO));
-			sql.append(String.format("HORACIERRE=%1$d AND HORAAPERTURA = %2$d",
-					hostal.getHoraCierre(),
-					hostal.getHoraApertura()));
-			sql.append(String.format(" WHERE ID_OPERADOR = %d", hostal.getIdOperador()));
+			sql.append(String.format("CORREO = '%1$s' , CUPO = %2$d , NOMBRE = '%3$s' , TIPO = '%4$s' ", (String)mapa.get("correo"),
+					(Integer)mapa.get("cupoTotal"),
+					(String)mapa.get("nombre"),
+					(String)mapa.get("tipo")));
+			sql.append(String.format(" WHERE ID_OPERADOR = %d", Long.valueOf((Integer)mapa.get("idOperador"))));
+			sql2.append(String.format("UPDATE %s.HOTEL SET ", USUARIO));
+			sql2.append(String.format("RESTAURANTE = '%1$c' , PISCINA ='%2$c' , PARQUEADERO='%3$c', WIFI ='%4$c' , TVCABLE='%5$c', NUMREGISTROSDT =%6$d ,DIRECCION = '%7$s' , TIPO = '%8$s'", 
+					boolToInt((Boolean)mapa.get("restaurante")),
+					boolToInt((Boolean)mapa.get("piscina")),
+					boolToInt((Boolean)mapa.get("parqueadero")),
+					boolToInt((Boolean)mapa.get("wifi")),
+					boolToInt((Boolean)mapa.get("tvCable")),
+					Long.valueOf((Integer)mapa.get("numRegistro")),
+					(String)mapa.get("direccion"),
+					(String)mapa.get("tipo")));
+			sql2.append(String.format(" WHERE ID_OPERADOR = %d", Long.valueOf((Integer)mapa.get("idOperador"))));
+			sql3 = new StringBuilder();
+			sql3.append(String.format("UPDATE %s.HOSTAL SET ", USUARIO));
+			sql3.append(String.format("HORACIERRE=%1$d ,HORAAPERTURA = %2$d",
+					(Integer)mapa.get("horaCierre"),
+					(Integer)mapa.get("horaApertura")));
+			sql3.append(String.format(" WHERE ID_OPERADOR = %d", Long.valueOf((Integer)mapa.get("idOperador"))));
 			break;
 		case "PERSONANATURAL":
-			PersonaNatural personaNatural = (PersonaNatural)operador;
 			sql.append(String.format("UPDATE %s.OPERADORES SET ", USUARIO));
-			sql.append(String.format("CORREO = '%1$s' AND CUPO = %2$d AND NOMBRE = '%3$s' AND TIPO = '%4$s'", personaNatural.getCorreo(),personaNatural.getCupoTotal(),personaNatural.getNombre(), personaNatural.getTipo()));
-			sql.append(String.format(" WHERE ID_OPERADOR = %d;", personaNatural.getIdOperador()));
-			sql.append(String.format("UPDATE %s.PERSONANATURAL SET ", USUARIO));
-			sql.append(String.format("COSTO_SERVICIOS = %1$f AND BAÑO_COMPARTIDO= '%2$c'", 
-					personaNatural.getCostoServicios(),
-					boolToInt(personaNatural.getBanhoCompartido())));
-			sql.append(String.format(" WHERE ID_OPERADOR = %d;", personaNatural.getIdOperador()));
+			sql.append(String.format("CORREO = '%1$s' AND CUPO = %2$d ,NOMBRE = '%3$s' , TIPO = '%4$s'", (String)mapa.get("correo"),
+					(Integer)mapa.get("cupoTotal"),
+					(String)mapa.get("nombre"),
+					(String)mapa.get("tipo")));
+			sql.append(String.format(" WHERE ID_OPERADOR = %d", Long.valueOf((Integer)mapa.get("idOperador"))));
+			sql2.append(String.format("UPDATE %s.PERSONANATURAL SET ", USUARIO));
+			sql2.append(String.format("COSTO_SERVICIOS = %1$f , BAÑO_COMPARTIDO= '%2$c'", 
+					Double.valueOf((Integer)mapa.get("costoServicios")),
+					boolToInt((Boolean)mapa.get("bahnoCompartido"))));
+			sql2.append(String.format(" WHERE ID_OPERADOR = %d", Long.valueOf((Integer)mapa.get("idOperador"))));
 			break;
 		case "VIVIENDA":
-			Vivienda vivienda = (Vivienda)operador;
 			sql.append(String.format("UPDATE %s.OPERADORES SET ", USUARIO));
-			sql.append(String.format("CORREO = '%1$s' AND CUPO = %2$d AND NOMBRE = '%3$s' AND TIPO = '%4$s'", vivienda.getCorreo(),vivienda.getCupoTotal(),vivienda.getNombre(), vivienda.getTipo()));
-			sql.append(String.format(" WHERE ID_OPERADOR = %d;", vivienda.getIdOperador()));
-			sql.append(String.format("UPDATE %s.PERSONANATURAL SET ", USUARIO));
-			sql.append(String.format("MENAJE = '%1$c'AND DIAS_ALQUILADA=%2$d AND NUMERO_HABITACIONES=%3$d AND UBICACION = '%4$s' AND PRECIO = %5$f AND SEGURO = '%6$s'", 
-					boolToInt(vivienda.getMenaje()),
-					vivienda.getDiasAlquilada(),
-					vivienda.getNumeroDeHabitaciones(),
-					vivienda.getUbicacion(),
-					vivienda.getCosto(),
-					vivienda.getSeguro()));
-			sql.append(String.format(" WHERE ID_OPERADOR = %d", vivienda.getIdOperador()));
+			sql.append(String.format("CORREO = '%1$s' , CUPO = %2$d ,NOMBRE = '%3$s', TIPO = '%4$s'", (String)mapa.get("correo"),
+					(Integer)mapa.get("cupoTotal"),
+					(String)mapa.get("nombre"),
+					(String)mapa.get("tipo")));
+			sql.append(String.format(" WHERE ID_OPERADOR = %d", Long.valueOf((Integer)mapa.get("idOperador"))));
+			sql2.append(String.format("UPDATE %s.PERSONANATURAL SET ", USUARIO));
+			sql2.append(String.format("MENAJE = '%1$c',DIAS_ALQUILADA=%2$d ,NUMERO_HABITACIONES=%3$d, UBICACION = '%4$s' , PRECIO = %5$f , SEGURO = '%6$s'", 
+					boolToInt((Boolean)mapa.get("menaje")),
+					(Integer)mapa.get("diasAlquilada"),
+					(Integer)mapa.get("numeroDeHabitaciones"),
+					(String)mapa.get("ubicacion"),
+					Double.valueOf((Integer)mapa.get("costo")),
+					(String)mapa.get("seguro")));
+			sql2.append(String.format(" WHERE ID_OPERADOR = %d", Long.valueOf((Integer)mapa.get("idOperador"))));
 			break;
 		case "VIVIENDAUNI":
-			ViviendaUni viviendaUni = (ViviendaUni)operador;
 			sql.append(String.format("UPDATE %s.OPERADORES SET ", USUARIO));
-			sql.append(String.format("CORREO = '%1$s' AND CUPO = %2$d AND NOMBRE = '%3$s' AND TIPO = '%4$s'", viviendaUni.getCorreo(),viviendaUni.getCupoTotal(),viviendaUni.getNombre(), viviendaUni.getTipo()));
-			sql.append(String.format(" WHERE ID_OPERADOR = %d;", viviendaUni.getIdOperador()));
-			sql.append(String.format("UPDATE %s.VIVIENDAUNI SET ", USUARIO));
-			sql.append(String.format("SALAS_DE_ESTUDIO_COSTO = %1$f AND RESTAURANTE_COSTO = %2$f AND GIMNASIO_COSTO = %3$f AND UBICACION='%4$s' AND CAPACIDAD = %5$d", 
-					viviendaUni.getSalasDeEstudioCosto(),
-					viviendaUni.getRestauranteCosto(),
-					viviendaUni.getGimnasioCosto(),
-					viviendaUni.getUbicacion(),
-					viviendaUni.getCapacidad()));
-			sql.append(String.format(" WHERE ID_OPERADOR = %d", viviendaUni.getIdOperador()));
+			sql.append(String.format("CORREO = '%1$s' ,CUPO = %2$d , NOMBRE = '%3$s' , TIPO = '%4$s'", (String)mapa.get("correo"),
+					(Integer)mapa.get("cupoTotal"),
+					(String)mapa.get("nombre"),
+					(String)mapa.get("tipo")));
+			sql.append(String.format(" WHERE ID_OPERADOR = %d", Long.valueOf((Integer)mapa.get("idOperador"))));
+			sql2.append(String.format("UPDATE %s.VIVIENDAUNI SET ", USUARIO));
+			sql2.append(String.format("SALAS_DE_ESTUDIO_COSTO = %1$f , RESTAURANTE_COSTO = %2$f , GIMNASIO_COSTO = %3$f , UBICACION='%4$s' , CAPACIDAD = %5$d", 
+					Double.valueOf((Integer)mapa.get("salasDeEstudioCosto")),
+					Double.valueOf((Integer)mapa.get("restauranteCosto")),
+					Double.valueOf((Integer)mapa.get("gimnasioCosto")),
+					(String)mapa.get("ubicacion"),
+					(Integer)mapa.get("capacidad")));
+			sql2.append(String.format(" WHERE ID_OPERADOR = %d", Long.valueOf((Integer)mapa.get("idOperador"))));
 			break;
 		case "HOTEL":
-			Hotel hotel = (Hotel)operador;
 			sql.append(String.format("UPDATE %s.OPERADORES SET ", USUARIO));
-			sql.append(String.format("CORREO = '%1$s' AND CUPO = %2$d AND NOMBRE = '%3$s' AND TIPO = '%4$s'", hotel.getCorreo(),hotel.getCupoTotal(),hotel.getNombre(), hotel.getTipo()));
-			sql.append(String.format(" WHERE ID_OPERADOR = %d;", hotel.getIdOperador()));
-			sql.append(String.format("UPDATE %s.HOTEL SET ", USUARIO));
-			sql.append(String.format("RESTAURANTE = '%1$c' AND PISCINA ='%2$c' AND PARQUEADERO='%3$c' AND WIFI ='%4$c' AND TVCABLE='%5$c' AND NUMREGISTROSDT =%6$d AND DIRECCION = '%7$s' AND TIPO = '%8$s'", 
-					boolToInt(hotel.getRestaurante()),
-					boolToInt(hotel.getPiscina()),
-					boolToInt(hotel.getParqueadero()),
-					boolToInt(hotel.getWifi()),
-					boolToInt(hotel.getTvCable()),
-					hotel.getNumRegisto(),
-					hotel.getDireccion(),
-					hotel.getTipo()));
-			sql.append(String.format(" WHERE ID_OPERADOR = %d", hotel.getIdOperador()));
+			sql.append(String.format("CORREO = '%1$s', CUPO = %2$d, NOMBRE = '%3$s', TIPO = '%4$s'", (String)mapa.get("correo"),
+					(Integer)mapa.get("cupoTotal"),
+					(String)mapa.get("nombre"),
+					(String)mapa.get("tipo")));
+			sql.append(String.format(" WHERE ID_OPERADOR = %d", Long.valueOf((Integer)mapa.get("idOperador"))));
+			sql2.append(String.format("UPDATE %s.HOTEL SET ", USUARIO));
+			sql2.append(String.format("RESTAURANTE = '%1$c', PISCINA ='%2$c', PARQUEADERO='%3$c', WIFI ='%4$c' ,TVCABLE='%5$c', NUMREGISTROSDT =%6$d , DIRECCION = '%7$s' , TIPO = '%8$s'", 
+					boolToInt((Boolean)mapa.get("restaurante")),
+					boolToInt((Boolean)mapa.get("piscina")),
+					boolToInt((Boolean)mapa.get("parqueadero")),
+					boolToInt((Boolean)mapa.get("wifi")),
+					boolToInt((Boolean)mapa.get("tvCable")),
+					Long.valueOf((Integer)mapa.get("numRegistro")),
+					(String)mapa.get("direccion"),
+					(String)mapa.get("tipo")));
+			sql2.append(String.format(" WHERE ID_OPERADOR = %d", Long.valueOf((Integer)mapa.get("idOperador"))));
 			break;
 		default:
 			throw new Exception("tipo no es valido");
 		}
 	 System.out.println(sql);
 		
-		PreparedStatement prepStmt = conn.prepareStatement(sql.toString());
-		recursos.add(prepStmt);
-		prepStmt.executeQuery();
+		Statement s = conn.createStatement();
+		s.addBatch(sql.toString());
+		s.addBatch(sql2.toString());
+		if(sql3!=null) {
+			s.addBatch(sql3.toString());
+		}
 	 
+		s.executeBatch();
 	}
 	
 	
